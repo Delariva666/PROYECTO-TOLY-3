@@ -22,8 +22,8 @@ public class Collisiones : MonoBehaviour
 
     public bool IsDead => currentHealth <= 0;
 
-    BoxCollider2D col2D;
-    Toly toly;
+    private BoxCollider2D col2D;
+    private Toly toly;
 
     private void Awake()
     {
@@ -42,7 +42,6 @@ public class Collisiones : MonoBehaviour
             Debug.Log("✔️ HeartManager conectado en Awake");
             heartManager.UpdateHearts(currentHealth);
 
-            // Verifica cada imagen del arreglo
             for (int i = 0; i < heartManager.heartImages.Length; i++)
             {
                 if (heartManager.heartImages[i] != null)
@@ -74,10 +73,14 @@ public class Collisiones : MonoBehaviour
                Physics2D.Raycast(footRight, Vector2.down, col2D.bounds.extents.y * 1.5f, groundLayer);
     }
 
-    public void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy") && canCollide)
+        GameObject atacante = collision.gameObject;
+
+        if (atacante.layer == LayerMask.NameToLayer("Enemy") && canCollide)
         {
+            if (atacante.name == "Enemigos") return; // Evita daño por el contenedor
+
             StartCoroutine(HandleCollision());
         }
     }
@@ -124,12 +127,17 @@ public class Collisiones : MonoBehaviour
         }
     }
 
-    public void OnTriggerEnter2D(Collider2D collision)
+    // ✅ Permite al jugador golpear enemigos con PlayerHit
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        PlayerHit playerHit = collision.GetComponent<PlayerHit>();
-        if (playerHit != null)
+        if (collision.CompareTag("Enemy"))
         {
-            playerHit.Hit();
+            PlayerHit playerHit = collision.GetComponent<PlayerHit>();
+            if (playerHit != null)
+            {
+                playerHit.Hit();
+                Debug.Log("⚔️ Enemigo golpeado por el jugador.");
+            }
         }
     }
 }

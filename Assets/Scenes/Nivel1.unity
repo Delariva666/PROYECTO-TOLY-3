@@ -5015,7 +5015,7 @@ GameObject:
   - component: {fileID: 717071986}
   m_Layer: 8
   m_Name: Troler
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5564,8 +5564,8 @@ MonoBehaviour:
   - {fileID: 1408456578}
   - {fileID: 84863774}
   - {fileID: 76521136}
-  fullHeart: {fileID: 21300000, guid: 5b20634e0b0e28c43bde743a3fe446dd, type: 3}
-  emptyHeart: {fileID: 21300000, guid: d4f3a809053fe5641805affc387c1a89, type: 3}
+  fullHeart: {fileID: 21300000, guid: 7acbe45e819431d459895421df5ca8b1, type: 3}
+  emptyHeart: {fileID: 21300000, guid: 8780f2bd4057c21478e386dd9da81e6c, type: 3}
 --- !u!4 &870231018
 Transform:
   m_ObjectHideFlags: 0
@@ -10665,7 +10665,7 @@ GameObject:
   - component: {fileID: 1753541165}
   m_Layer: 8
   m_Name: Troler (1)
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13226,7 +13226,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 359, y: 155}
+  m_AnchoredPosition: {x: 359, y: 130}
   m_SizeDelta: {x: 66.9396, y: 72.6719}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2084734753

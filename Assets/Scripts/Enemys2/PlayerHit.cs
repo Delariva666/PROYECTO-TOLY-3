@@ -4,32 +4,48 @@ using UnityEngine;
 public class PlayerHit : MonoBehaviour
 {
     private Animator animator;
-    private int hitCount = 0; // Número de golpes recibidos
+    private int hitCount = 0; // Número de golpes recibidos por el enemigo
     private bool isHurt = false; // Bandera para evitar múltiples hits simultáneos
     private GameManager gameManager; // Referencia al GameManager
-    private AutoMovement autoMovement; // Control del movimiento enemigo
+    private AutoMovement autoMovement; // Movimiento del enemigo
 
     void Start()
     {
-        gameManager = FindObjectOfType<GameManager>(); // Busca el GameManager en la escena
-        autoMovement = GetComponent<AutoMovement>(); // Obtiene el componente de movimiento
+        gameManager = FindObjectOfType<GameManager>(); // Buscar GameManager en escena
+        autoMovement = GetComponent<AutoMovement>(); // Obtener script de movimiento enemigo
     }
 
     private void Awake()
     {
-        animator = GetComponent<Animator>(); // Inicializa el Animator
+        animator = GetComponent<Animator>(); // Obtener Animator
     }
 
-    // Método llamado cuando el enemigo recibe un golpe
+    // ⚠ NUEVO: Ataque al jugador con animación
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            animator.SetTrigger("AproximateAttack");
+
+
+            var jugador = other.GetComponent<Toly>();
+            if (jugador != null)
+            {
+                jugador.Hit(); // Aplica daño al jugador
+            }
+        }
+    }
+
+    // Lógica cuando el enemigo recibe un golpe del jugador
     public void Hit()
     {
-        if (isHurt) return; // Evita múltiples golpes simultáneos
+        if (isHurt) return;
 
-        isHurt = true; 
-        animator.SetTrigger("HitHurt"); // Activa animación de golpe
-        hitCount++; 
+        isHurt = true;
+        animator.SetTrigger("HitHurt"); // Animación de recibir golpe
+        hitCount++;
 
-        if (hitCount >= 3) // Si el enemigo ha recibido 3 golpes, muere
+        if (hitCount >= 3) // Muere al tercer golpe
         {
             EnemyDeath();
         }
@@ -39,30 +55,26 @@ public class PlayerHit : MonoBehaviour
         }
     }
 
-    // Animación de "lastimado" por un corto tiempo
+    // Breve pausa visual de estar "lastimado"
     private IEnumerator PlayHurtAnimation()
     {
-        float hurtDuration = 0.1f; // Duración del efecto "lastimado"
-        yield return new WaitForSeconds(hurtDuration);
-        
-        animator.SetTrigger("Walk"); // Vuelve a la animación de caminar
-        isHurt = false; // Resetea la bandera
+        yield return new WaitForSeconds(0.1f);
+        animator.SetTrigger("Walk"); // Volver a caminar
+        isHurt = false;
     }
 
-    // Método llamado cuando el enemigo muere
+    // Lógica de muerte del enemigo
     public void EnemyDeath()
     {
-        animator.SetTrigger("HitDeath"); // Activa animación de muerte
-        gameObject.layer = LayerMask.NameToLayer("OnlyGround"); // Cambia la capa del objeto
+        animator.SetTrigger("HitDeath"); // Animación de muerte
+        gameObject.layer = LayerMask.NameToLayer("OnlyGround");
 
         if (gameManager != null)
         {
-            gameManager.RegistrarEnemigoEliminado(); // Incrementa la puntuación en el GameManager
+            gameManager.RegistrarEnemigoEliminado(); // Informar al GameManager
         }
 
-        autoMovement.PauseMovement(); // Pausa cualquier movimiento del enemigo
-        Destroy(gameObject, 1f); // Destruye el objeto después de 1 segundo
+        autoMovement.PauseMovement(); // Detener movimiento
+        Destroy(gameObject, 1f); // Destruir después de 1 segundo
     }
 }
-
-
