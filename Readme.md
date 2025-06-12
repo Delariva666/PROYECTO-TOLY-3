@@ -44,7 +44,7 @@ Mover: A/D o ←/→
 
 Saltar: Space
 
-Atacar: clic izquierdo (al enemigo por detrás)
+Atacar: c (al enemigo por detrás)
 
 
 
