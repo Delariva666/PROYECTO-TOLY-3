@@ -1,4 +1,4 @@
-# 📚 Proyecto Toly  – Versión 3 “Final"
+# 👾 Proyecto Toly  – Versión 3 “Final" 📚
 
 **Descripción:**  
 Juego de plataformas 2D en Unity, desarrollado como proyecto de la materia de Implantación de la Licenciatura en Informática y Tecnologías Computacionales (UAA, octavo semestre). Controlas a Toly, evitas trampas, derrotas enemigos y coleccionas corazones para seguir vivo.
