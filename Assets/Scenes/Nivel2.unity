@@ -4560,6 +4560,7 @@ MonoBehaviour:
   healthSlider: {fileID: 1701987318}
   heartManager: {fileID: 1703949917}
   deathClip: {fileID: 8300000, guid: 1c9557bf1dc92964eae4339ba57144f1, type: 3}
+  hitClip: {fileID: 8300000, guid: ca3f895538ad7d04f8d122390eb9ef01, type: 3}
 --- !u!114 &657794946
 MonoBehaviour:
   m_ObjectHideFlags: 0

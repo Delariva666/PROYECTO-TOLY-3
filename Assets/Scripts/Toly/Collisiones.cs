@@ -21,8 +21,10 @@ public class Collisiones : MonoBehaviour
     public HeartManager heartManager;
 
     [Header("Audio")]
-    [Tooltip("Arrastra aquí el clip de sonido que se reproduce al morir")]
+    [Tooltip("Clip de sonido que se reproduce al morir")]
     public AudioClip deathClip;
+    [Tooltip("Clip de sonido que se reproduce al golpear un enemigo")]
+    public AudioClip hitClip;
 
     public bool IsDead => currentHealth <= 0;
 
@@ -67,13 +69,13 @@ public class Collisiones : MonoBehaviour
 
     public bool Grounded()
     {
-        Vector2 footLeft  = new Vector2(col2D.bounds.center.x - col2D.bounds.extents.x, col2D.bounds.center.y);
+        Vector2 footLeft = new Vector2(col2D.bounds.center.x - col2D.bounds.extents.x, col2D.bounds.center.y);
         Vector2 footRight = new Vector2(col2D.bounds.center.x + col2D.bounds.extents.x, col2D.bounds.center.y);
 
-        Debug.DrawRay(footLeft,  Vector2.down * col2D.bounds.extents.y * 1.5f, Color.magenta);
+        Debug.DrawRay(footLeft, Vector2.down * col2D.bounds.extents.y * 1.5f, Color.magenta);
         Debug.DrawRay(footRight, Vector2.down * col2D.bounds.extents.y * 1.5f, Color.magenta);
 
-        return Physics2D.Raycast(footLeft,  Vector2.down, col2D.bounds.extents.y * 1.5f, groundLayer) ||
+        return Physics2D.Raycast(footLeft, Vector2.down, col2D.bounds.extents.y * 1.5f, groundLayer) ||
                Physics2D.Raycast(footRight, Vector2.down, col2D.bounds.extents.y * 1.5f, groundLayer);
     }
 
@@ -128,19 +130,22 @@ public class Collisiones : MonoBehaviour
         {
             // Reproducir sonido de muerte
             if (deathClip != null)
-            {
                 AudioSource.PlayClipAtPoint(deathClip, transform.position);
-            }
 
             gameObject.layer = LayerMask.NameToLayer("PlayerDead");
             Debug.Log("☠️ El jugador ha muerto.");
         }
     }
 
+    // ✅ Permite al jugador golpear enemigos con PlayerHit
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Enemy"))
         {
+            // Reproducir sonido de golpe
+            if (hitClip != null)
+                AudioSource.PlayClipAtPoint(hitClip, transform.position);
+
             PlayerHit playerHit = collision.GetComponent<PlayerHit>();
             if (playerHit != null)
             {
