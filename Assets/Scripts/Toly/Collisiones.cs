@@ -20,6 +20,10 @@ public class Collisiones : MonoBehaviour
     public Slider healthSlider;
     public HeartManager heartManager;
 
+    [Header("Audio")]
+    [Tooltip("Arrastra aquí el clip de sonido que se reproduce al morir")]
+    public AudioClip deathClip;
+
     public bool IsDead => currentHealth <= 0;
 
     private BoxCollider2D col2D;
@@ -63,13 +67,13 @@ public class Collisiones : MonoBehaviour
 
     public bool Grounded()
     {
-        Vector2 footLeft = new Vector2(col2D.bounds.center.x - col2D.bounds.extents.x, col2D.bounds.center.y);
+        Vector2 footLeft  = new Vector2(col2D.bounds.center.x - col2D.bounds.extents.x, col2D.bounds.center.y);
         Vector2 footRight = new Vector2(col2D.bounds.center.x + col2D.bounds.extents.x, col2D.bounds.center.y);
 
-        Debug.DrawRay(footLeft, Vector2.down * col2D.bounds.extents.y * 1.5f, Color.magenta);
+        Debug.DrawRay(footLeft,  Vector2.down * col2D.bounds.extents.y * 1.5f, Color.magenta);
         Debug.DrawRay(footRight, Vector2.down * col2D.bounds.extents.y * 1.5f, Color.magenta);
 
-        return Physics2D.Raycast(footLeft, Vector2.down, col2D.bounds.extents.y * 1.5f, groundLayer) ||
+        return Physics2D.Raycast(footLeft,  Vector2.down, col2D.bounds.extents.y * 1.5f, groundLayer) ||
                Physics2D.Raycast(footRight, Vector2.down, col2D.bounds.extents.y * 1.5f, groundLayer);
     }
 
@@ -122,12 +126,17 @@ public class Collisiones : MonoBehaviour
     {
         if (IsDead)
         {
+            // Reproducir sonido de muerte
+            if (deathClip != null)
+            {
+                AudioSource.PlayClipAtPoint(deathClip, transform.position);
+            }
+
             gameObject.layer = LayerMask.NameToLayer("PlayerDead");
             Debug.Log("☠️ El jugador ha muerto.");
         }
     }
 
-    // ✅ Permite al jugador golpear enemigos con PlayerHit
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Enemy"))
