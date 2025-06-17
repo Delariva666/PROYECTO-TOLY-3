@@ -23,8 +23,13 @@ public class Collisiones : MonoBehaviour
     [Header("Audio")]
     [Tooltip("Clip de sonido que se reproduce al morir")]
     public AudioClip deathClip;
+
     [Tooltip("Clip de sonido que se reproduce al golpear un enemigo")]
     public AudioClip hitClip;
+
+    [Range(0f, 1f)]
+    [Tooltip("Volumen del sonido de golpe")]
+    public float hitVolume = 0.5f; // ✅ NUEVO campo agregado
 
     public bool IsDead => currentHealth <= 0;
 
@@ -128,7 +133,6 @@ public class Collisiones : MonoBehaviour
     {
         if (IsDead)
         {
-            // Reproducir sonido de muerte
             if (deathClip != null)
                 AudioSource.PlayClipAtPoint(deathClip, transform.position);
 
@@ -137,14 +141,20 @@ public class Collisiones : MonoBehaviour
         }
     }
 
-    // ✅ Permite al jugador golpear enemigos con PlayerHit
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Enemy"))
         {
-            // Reproducir sonido de golpe
+            // ✅ Reproducir sonido de golpe con volumen ajustable
             if (hitClip != null)
-                AudioSource.PlayClipAtPoint(hitClip, transform.position);
+            {
+                GameObject tempAudio = new GameObject("TempHitSound");
+                AudioSource tempSource = tempAudio.AddComponent<AudioSource>();
+                tempSource.clip = hitClip;
+                tempSource.volume = hitVolume;
+                tempSource.Play();
+                Destroy(tempAudio, hitClip.length);
+            }
 
             PlayerHit playerHit = collision.GetComponent<PlayerHit>();
             if (playerHit != null)

@@ -5,6 +5,7 @@ public class Mover : MonoBehaviour
 {
     enum Direction { Left = -1, None = 0, Right = 1 }
     Direction currentDirection = Direction.None;
+
     public float speed;
     public float acceleration;
     public float maxVelocity;
@@ -24,11 +25,18 @@ public class Mover : MonoBehaviour
     Animator animator;
     public GameObject HitBox;
 
+    [Header("Audio Salto")]
+    [Tooltip("Sonido al saltar")]
+    public AudioClip jumpClip; // <- NUEVO: clip de sonido
+
+    private AudioSource audioSource; // <- NUEVO: referencia al componente AudioSource
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
         rb2D = GetComponent<Rigidbody2D>();
         collisiones = GetComponent<Collisiones>();
+        audioSource = GetComponent<AudioSource>(); // <- NUEVO: se asigna el AudioSource
     }
 
     void Start()
@@ -152,6 +160,12 @@ public class Mover : MonoBehaviour
             isJumping = true;
             Vector2 fuerza = new Vector2(0, jumpForce);
             rb2D.AddForce(fuerza, ForceMode2D.Impulse);
+
+            // NUEVO: reproducir sonido de salto
+            if (jumpClip != null && audioSource != null)
+            {
+                audioSource.PlayOneShot(jumpClip);
+            }
         }
     }
 
@@ -206,4 +220,3 @@ public class Mover : MonoBehaviour
         }
     }
 }
-
